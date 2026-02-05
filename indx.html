@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>For My Eternal Valentine ❤️</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@300;500&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --primary: #ff4d6d;
+        --secondary: #ffb3c1;
+      }
+      body {
+        background: radial-gradient(circle at center, #fff5f5 0%, #ffe3e3 100%);
+        font-family: "Quicksand", sans-serif;
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+        min-height: 100dvh;
+      }
+
+      .glass-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 2rem;
+      }
+
+      .fountain-heart {
+        position: fixed;
+        bottom: -20px;
+        pointer-events: none;
+        z-index: 5;
+        user-select: none;
+        animation: riseAnim var(--duration) linear forwards;
+      }
+
+      @keyframes riseAnim {
+        0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 1; }
+        100% { transform: translateY(-110vh) translateX(var(--drift)) rotate(360deg); opacity: 0; }
+      }
+
+      .heart-particle {
+        position: fixed;
+        pointer-events: none;
+        z-index: 100;
+        animation: flyUpAnim 2s ease-out forwards;
+        font-size: 24px;
+      }
+
+      @keyframes flyUpAnim {
+        0% { transform: translateY(0) scale(1); opacity: 1; }
+        100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
+      }
+
+      .flower {
+        transition: all 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transform: scale(0);
+        display: inline-block;
+      }
+      .flower.bloom { transform: scale(1); }
+
+      .float-anim { animation: floating 3s ease-in-out infinite; }
+      @keyframes floating {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-15px); }
+      }
+
+      .dancing-font { font-family: "Dancing Script", cursive; }
+
+      .photo-card { transition: transform 0.3s ease; }
+    </style>
+  </head>
+  <body class="min-h-screen">
+    <audio id="loveSong" loop preload="auto">
+      <source src="song.mp3" type="audio/mpeg" />
+    </audio>
+
+    <button onclick="toggleMusic()" id="musicBtn" class="fixed bottom-4 right-4 z-50 bg-white/60 backdrop-blur-md p-3 rounded-full shadow-lg border border-pink-200 opacity-0 transition-opacity duration-1000 active:scale-90">
+        <span id="musicIcon">🎵</span>
+    </button>
+
+    <section id="hero" class="h-screen flex items-center justify-center p-6 text-center relative overflow-hidden">
+      <div class="glass-card p-10 z-20 w-full max-w-sm float-anim shadow-2xl">
+        <h1 class="text-4xl font-bold text-pink-600 mb-2 dancing-font">Hi [Name]! ❤️</h1>
+        <p id="hero-p" class="text-gray-600 mb-8 font-medium italic">I have a question for you...</p>
+
+        <div class="flex flex-col gap-4 items-center">
+          <button onclick="revealEverything()" id="yesBtn" class="bg-gradient-to-r from-pink-500 to-rose-400 text-white text-xl font-bold py-4 px-12 rounded-full shadow-lg transition-all active:scale-90 w-full z-30">
+            YES! 💖
+          </button>
+          <button id="noButton" onclick="moveNo()" onmouseover="moveNo()" class="text-pink-400 font-medium italic transition-all duration-300 z-30">
+            No?
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section id="secret-content" class="hidden opacity-0 transition-opacity duration-1000 px-6 pb-20">
+      
+      <div class="glass-card p-6 mb-10 text-center shadow-xl border-b-4 border-pink-400">
+        <p class="text-pink-500 uppercase tracking-widest text-xs font-bold mb-4">Every second with you is a gift:</p>
+        <div id="timer" class="flex justify-center gap-4 text-pink-600 font-bold text-2xl"></div>
+      </div>
+
+      <div class="glass-card p-8 mb-10 shadow-inner relative overflow-hidden">
+        <div class="absolute -top-4 -right-4 text-6xl opacity-20">🌹</div>
+        <h2 class="text-3xl font-bold text-pink-600 dancing-font mb-4">My Promise...</h2>
+        <p class="text-gray-700 leading-relaxed text-lg italic">
+          "I promise to be your biggest fan, your safest place, and your favorite adventure. From the quiet mornings to the chaotic nights, I want to be by your side through it all. You aren't just my girlfriend; you're my soul's home. You're my favorite person in every universe. I promise to keep making you laugh, to hold your hand through the hard parts, and to love you more tomorrow than I do today. Happy Valentine's Day, my love."
+        </p>
+      </div>
+
+      <div class="flex justify-around mb-12" id="flower-garden">
+        <span class="flower text-5xl">🌸</span>
+        <span class="flower text-5xl" style="transition-delay: 0.2s">🌹</span>
+        <span class="flower text-5xl" style="transition-delay: 0.4s">🌺</span>
+        <span class="flower text-5xl" style="transition-delay: 0.6s">🌷</span>
+      </div>
+
+      <h3 class="text-center dancing-font text-3xl text-pink-600 mb-8">Our Beautiful Journey</h3>
+      <div class="grid grid-cols-1 gap-10 mb-16">
+        <div class="photo-card glass-card p-4 transform rotate-2 shadow-lg">
+          <img src="https://via.placeholder.com/400x500" class="rounded-lg w-full object-cover h-72 mb-4" />
+          <p class="text-center dancing-font text-2xl text-pink-500">The day my life changed...</p>
+        </div>
+        <div class="photo-card glass-card p-4 transform -rotate-2 shadow-lg">
+          <img src="https://via.placeholder.com/400x500" class="rounded-lg w-full object-cover h-72 mb-4" />
+          <p class="text-center dancing-font text-2xl text-pink-500">Your beautiful smile</p>
+        </div>
+        <div class="photo-card glass-card p-4 transform rotate-1 shadow-lg">
+          <img src="https://via.placeholder.com/400x500" class="rounded-lg w-full object-cover h-72 mb-4" />
+          <p class="text-center dancing-font text-2xl text-pink-500">Our little adventures</p>
+        </div>
+      </div>
+
+      <button onclick="window.location.href = 'tel:1234567890'" class="w-full bg-white text-pink-500 border-2 border-pink-500 font-bold py-4 rounded-full flex items-center justify-center gap-2 shadow-lg active:scale-95 mb-10">
+        <span>📞</span> Call Me for a Kiss
+      </button>
+      <p class="text-center text-pink-400 italic text-sm">Forever & Always ❤️</p>
+    </section>
+
+    <script>
+      const startDate = new Date(2023, 5, 15); // Anniversary Date (Year, Month-1, Day)
+      const romanticPhrases = [
+        "Are you sure? ❤️", "But I love you! 💖", "Think again! ✨", 
+        "You're my world! 🌍", "Give me a chance! 💓", "You're the one! 💑", 
+        "Don't be silly! 😊", "Forever yours! ♾️", "Say Yes please! 🥺"
+      ];
+      let phraseIndex = 0;
+
+      // 1. Music Logic
+      function toggleMusic() {
+        const song = document.getElementById("loveSong");
+        const icon = document.getElementById("musicIcon");
+        if (song.paused) {
+          song.play();
+          icon.innerText = "🎵";
+        } else {
+          song.pause();
+          icon.innerText = "🔇";
+        }
+      }
+
+      // 2. Heart Fountain
+      function createFountainHeart() {
+        const emojis = ['❤️', '💖', '💝', '💗', '🌹'];
+        const heart = document.createElement("div");
+        heart.className = "fountain-heart";
+        heart.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.fontSize = (Math.random() * 20 + 15) + "px";
+        const duration = (Math.random() * 3 + 4) + "s";
+        heart.style.setProperty("--duration", duration);
+        heart.style.setProperty("--drift", (Math.random() * 200 - 100) + "px");
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), parseFloat(duration) * 1000);
+      }
+      setInterval(createFountainHeart, 450);
+
+      // 3. No Button Logic
+      function moveNo() {
+        const btn = document.getElementById("noButton");
+        const yesBtn = document.getElementById("yesBtn");
+        btn.style.position = "fixed";
+        btn.style.left = Math.random() * 70 + 10 + "vw";
+        btn.style.top = Math.random() * 70 + 10 + "vh";
+        btn.innerText = romanticPhrases[phraseIndex];
+        phraseIndex = (phraseIndex + 1) % romanticPhrases.length;
+        const size = parseFloat(window.getComputedStyle(yesBtn).fontSize);
+        if (size < 60) yesBtn.style.fontSize = (size + 2) + "px";
+      }
+
+      // 4. Reveal Everything
+      function revealEverything() {
+        const song = document.getElementById("loveSong");
+        song.play().catch(() => console.log("Music play blocked by browser"));
+        
+        document.getElementById("musicBtn").classList.remove("opacity-0");
+        for(let i=0; i<40; i++) setTimeout(createFountainHeart, i * 50);
+        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+        
+        document.getElementById("hero-p").innerText = "You just made me the luckiest person! 🥰";
+        const secret = document.getElementById("secret-content");
+        secret.classList.remove("hidden");
+        setTimeout(() => {
+          secret.style.opacity = "1";
+          document.querySelectorAll(".flower").forEach(f => f.classList.add("bloom"));
+          secret.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+      }
+
+      // 5. Timer
+      function updateTimer() {
+        const now = new Date();
+        const diff = now - startDate;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((diff / 1000 / 60) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+        document.getElementById("timer").innerHTML = `<div>${days}d</div><div>${hours}h</div><div>${minutes}m</div><div>${seconds}s</div>`;
+      }
+      setInterval(updateTimer, 1000);
+      updateTimer();
+
+      // 6. Touch Trail
+      document.addEventListener("touchstart", (e) => {
+        const heart = document.createElement("div");
+        heart.innerHTML = "💖";
+        heart.className = "heart-particle";
+        heart.style.left = e.touches[0].clientX - 10 + "px";
+        heart.style.top = e.touches[0].clientY - 10 + "px";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 2000);
+      });
+    </script>
+  </body>
+</html>
+
+<!-- 
+The Photos: Replace the https://via.placeholder.com/400x500 links with your actual photo URLs.
+
+The Date: Update const startDate = new Date(2023, 5, 15); with your anniversary.
+
+The Phone: Change tel:1234567890 to your actual phone number.
+
+The Name: Replace [Name] in the <h1> tag with her name. -->
